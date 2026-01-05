@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planejamento Semanal - Consultor</title>
+    <title>Planejamento Semanal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -14,1767 +13,1453 @@
             box-sizing: border-box;
         }
 
-```
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-        background: #FFFFFF;
-        min-height: 100vh;
-        padding: 20px;
-        padding-bottom: 100px;
-        color: #1A1A1A;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    /* Header */
-    .header {
-        background: white;
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        border: 1px solid #F3F4F6;
-    }
-
-    .header-top {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 20px;
-    }
-
-    .logo-container {
-        width: 48px;
-        height: 48px;
-        border-radius: 6px;
-        background: transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: opacity 0.2s;
-        overflow: hidden;
-    }
-
-    .logo-container:hover {
-        opacity: 0.7;
-    }
-
-    .logo-container img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-
-    .logo-placeholder {
-        font-size: 20px;
-        color: #E5E7EB;
-        opacity: 0.5;
-    }
-
-    .header-info {
-        flex: 1;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-    }
-
-    .info-field {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .info-label {
-        font-size: 0.75em;
-        color: #6B7280;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 600;
-    }
-
-    .info-input {
-        border: 1px solid #E5E7EB;
-        border-radius: 8px;
-        padding: 8px 12px;
-        font-size: 0.95em;
-        background: white;
-        transition: all 0.2s;
-        font-family: inherit;
-    }
-
-    .info-input:focus {
-        outline: none;
-        border-color: #4ADE80;
-        box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
-    }
-
-    .efficiency-badge {
-        grid-column: span 2;
-        background: linear-gradient(135deg, #1E3A2F 0%, #2D5A47 100%);
-        color: white;
-        border-radius: 12px;
-        padding: 16px;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(30, 58, 47, 0.3);
-    }
-
-    .efficiency-label {
-        font-size: 0.75em;
-        opacity: 0.9;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 4px;
-    }
-
-    .efficiency-value {
-        font-size: 2em;
-        font-weight: 600;
-    }
-
-    /* Controls */
-    .controls {
-        background: white;
-        border-radius: 12px;
-        padding: 16px 20px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        border: 1px solid #F3F4F6;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logo-area {
-        height: 36px;
-        padding: 0 12px;
-        border-radius: 6px;
-        background: transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: opacity 0.2s;
-        min-width: 80px;
-    }
-
-    .logo-area:hover {
-        opacity: 0.7;
-    }
-
-    .logo-text {
-        font-size: 0.75em;
-        color: #D1D5DB;
-        font-weight: 500;
-        opacity: 0.5;
-    }
-
-    .logo-area img {
-        max-height: 32px;
-        max-width: 100px;
-        object-fit: contain;
-    }
-
-    .btn {
-        background: #4ADE80;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 12px 20px;
-        font-size: 0.95em;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
-        font-family: inherit;
-    }
-
-    .btn:hover {
-        background: #3ECE72;
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(74, 222, 128, 0.4);
-    }
-
-    .btn:active {
-        transform: translateY(0);
-    }
-
-    .btn-secondary {
-        background: #F3F4F6;
-        color: #6B7280;
-        box-shadow: none;
-    }
-
-    .btn-secondary:hover {
-        background: #E5E7EB;
-        box-shadow: none;
-    }
-
-    /* Week Days */
-    .week-container {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .day-card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        border: 1px solid #F3F4F6;
-        transition: max-height 0.3s ease;
-        max-height: 1000px;
-        overflow: hidden;
-    }
-
-    .day-card.collapsed {
-        max-height: 80px;
-    }
-
-    .day-card.holiday {
-        background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
-        color: white;
-        border: none;
-    }
-
-    .day-card.sunday {
-        background: linear-gradient(135deg, #1E3A2F 0%, #2D5A47 100%);
-        color: white;
-        border: none;
-    }
-
-    .day-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #F3F4F6;
-    }
-
-    .day-card.holiday .day-header,
-    .day-card.sunday .day-header {
-        border-bottom-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .day-actions {
-        display: flex;
-        gap: 4px;
-    }
-
-    .day-icon-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 6px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #6B7280;
-    }
-
-    .day-icon-btn:hover {
-        background: rgba(0, 0, 0, 0.05);
-    }
-
-    .day-card.holiday .day-icon-btn,
-    .day-card.sunday .day-icon-btn {
-        color: rgba(255, 255, 255, 0.8);
-    }
-
-    .day-card.holiday .day-icon-btn:hover,
-    .day-card.sunday .day-icon-btn:hover {
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-    }
-
-    .day-icon-remove:hover {
-        background: rgba(220, 38, 38, 0.1) !important;
-        color: #DC2626 !important;
-    }
-
-    .day-card.holiday .day-icon-remove:hover,
-    .day-card.sunday .day-icon-remove:hover {
-        background: rgba(255, 255, 255, 0.2) !important;
-        color: white !important;
-    }
-
-    .collapse-icon {
-        transition: transform 0.2s;
-    }
-
-    .collapsed .collapse-icon {
-        transform: rotate(180deg);
-    }
-
-    .day-content {
-        display: block;
-        transition: all 0.3s ease;
-    }
-
-    .collapsed .day-content {
-        display: none;
-    }
-
-    .day-title {
-        font-size: 1.1em;
-        font-weight: 600;
-        color: #1A1A1A;
-    }
-
-    .day-card.holiday .day-title,
-    .day-card.sunday .day-title {
-        color: white;
-    }
-
-    .day-date {
-        font-size: 0.9em;
-        color: #6B7280;
-    }
-
-    .day-card.holiday .day-date,
-    .day-card.sunday .day-date {
-        color: rgba(255, 255, 255, 0.8);
-    }
-
-    .add-visit-btn-inline {
-        background: transparent;
-        border: 1px solid #4ADE80;
-        color: #4ADE80;
-        border-radius: 8px;
-        padding: 8px 16px;
-        font-size: 0.9em;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-family: inherit;
-        font-weight: 600;
-        width: 100%;
-        margin-bottom: 12px;
-    }
-
-    .add-visit-btn-inline:hover {
-        background: #4ADE80;
-        color: white;
-    }
-
-    .day-card.holiday .add-visit-btn-inline,
-    .day-card.sunday .add-visit-btn-inline {
-        border-color: rgba(255, 255, 255, 0.6);
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    .day-card.holiday .add-visit-btn-inline:hover,
-    .day-card.sunday .add-visit-btn-inline:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: white;
-        color: white;
-    }
-
-    /* Visits */
-    .visits-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .visit-item {
-        background: white;
-        border-radius: 10px;
-        padding: 16px;
-        border: 1px solid #F3F4F6;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1.5fr 100px 32px;
-        gap: 12px;
-        align-items: center;
-        transition: all 0.2s;
-    }
-
-    .day-card.holiday .visit-item,
-    .day-card.sunday .visit-item {
-        background: rgba(255, 255, 255, 0.95);
-    }
-
-    .visit-item:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    }
-
-    .visit-field {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .visit-label {
-        font-size: 0.75em;
-        color: #6B7280;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .visit-value {
-        font-size: 0.9em;
-        color: #1A1A1A;
-        font-weight: 500;
-    }
-
-    .checkbox-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .checkbox {
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-        accent-color: #4ADE80;
-    }
-
-    .delete-visit-btn {
-        width: 32px;
-        height: 32px;
-        background: transparent;
-        border: none;
-        border-radius: 6px;
-        color: #DC2626;
-        font-size: 18px;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .delete-visit-btn:hover {
-        background: rgba(220, 38, 38, 0.1);
-    }
-
-    /* Modal */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(8px);
-        z-index: 1000;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
-
-    .modal.active {
-        display: flex;
-    }
-
-    .modal-content {
-        background: white;
-        border-radius: 16px;
-        padding: 24px;
-        max-width: 500px;
-        width: 100%;
-        box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.12),
-            0 2px 8px rgba(0, 0, 0, 0.08);
-    }
-
-    .modal-title {
-        font-size: 1.3em;
-        font-weight: 600;
-        margin-bottom: 20px;
-        color: #1A1A1A;
-    }
-
-    .modal-form {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .form-label {
-        font-size: 0.85em;
-        color: #6B7280;
-        font-weight: 600;
-    }
-
-    .form-input, .form-select {
-        border: 1px solid #E5E7EB;
-        border-radius: 8px;
-        padding: 10px 12px;
-        font-size: 0.95em;
-        background: white;
-        font-family: inherit;
-    }
-
-    .form-input:focus, .form-select:focus {
-        outline: none;
-        border-color: #4ADE80;
-        box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
-    }
-
-    .form-input:disabled {
-        background: #F9FAFB;
-        color: #9CA3AF;
-        cursor: not-allowed;
-    }
-
-    .modal-actions {
-        display: flex;
-        gap: 12px;
-        margin-top: 8px;
-    }
-
-    .modal-actions .btn {
-        flex: 1;
-    }
-
-    /* Print Button */
-    .print-btn {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        width: 60px;
-        height: 60px;
-        border-radius: 30px;
-        background: #4ADE80;
-        border: none;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0 4px 16px rgba(74, 222, 128, 0.4);
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1001;
-    }
-
-    .print-btn:hover {
-        background: #3ECE72;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(74, 222, 128, 0.5);
-    }
-
-    /* Export Menu */
-    .export-menu {
-        position: fixed;
-        bottom: 100px;
-        right: 30px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        border: 1px solid #E5E7EB;
-        overflow: hidden;
-        z-index: 1002;
-        min-width: 180px;
-    }
-
-    .export-option {
-        width: 100%;
-        padding: 12px 16px;
-        background: white;
-        border: none;
-        border-bottom: 1px solid #F3F4F6;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-family: inherit;
-        font-size: 0.9em;
-        color: #1A1A1A;
-    }
-
-    .export-option:last-child {
-        border-bottom: none;
-    }
-
-    .export-option:hover {
-        background: #F9FAFB;
-    }
-
-    .export-option svg {
-        flex-shrink: 0;
-        stroke: #4ADE80;
-    }
-
-    .export-option-danger svg {
-        stroke: #DC2626;
-    }
-
-    .export-option-danger:hover {
-        background: #FEE2E2;
-    }
-
-    /* Add Day Button */
-    .add-day-btn {
-        position: fixed;
-        bottom: 30px;
-        right: 110px;
-        width: 60px;
-        height: 60px;
-        border-radius: 30px;
-        background: #1E3A2F;
-        border: none;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0 4px 16px rgba(30, 58, 47, 0.4);
-        transition: all 0.2s;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
-
-    .add-day-btn:hover {
-        background: #2D5A47;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(30, 58, 47, 0.5);
-    }
-
-    /* New Client Button */
-    .new-client-btn {
-        position: fixed;
-        bottom: 30px;
-        right: 190px;
-        width: 60px;
-        height: 60px;
-        border-radius: 30px;
-        background: #4ADE80;
-        border: none;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0 4px 16px rgba(74, 222, 128, 0.4);
-        transition: all 0.2s;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
-
-    .new-client-btn:hover {
-        background: #3ECE72;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(74, 222, 128, 0.5);
-    }
-
-    /* Responsive */
-    @media (max-width: 1024px) and (min-width: 769px) {
-        .container {
-            max-width: 95%;
-        }
-
-        .visit-item {
-            grid-template-columns: 1fr 1fr 1.5fr 80px 32px;
-            gap: 10px;
-        }
-    }
-
-    @media (max-width: 768px) {
         body {
-            padding: 12px;
-            padding-bottom: 100px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(180deg, #F5F5F7 0%, #E5E5E7 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 120px;
+            color: #1A1A1A;
         }
 
         .container {
-            padding: 0;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .header {
-            padding: 16px;
-            margin-bottom: 16px;
+        /* Tabs */
+        .tabs-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            display: flex;
+            gap: 8px;
         }
 
-        .header-top {
-            flex-direction: column;
-            align-items: stretch;
+        .tab-btn {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #6B7280;
         }
 
-        .logo-container {
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4ADE80 0%, #3ECE72 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(74, 222, 128, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Clients Table */
+        .clients-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .clients-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .clients-title {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .clients-table {
             width: 100%;
-            height: 48px;
+            border-collapse: collapse;
         }
 
-        .header-info {
-            grid-template-columns: 1fr;
+        .clients-table th {
+            text-align: left;
+            padding: 12px;
+            font-size: 0.75em;
+            color: #6B7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-bottom: 2px solid #E5E7EB;
         }
 
-        .efficiency-badge {
-            grid-column: span 1;
+        .clients-table td {
+            padding: 12px;
+            border-bottom: 1px solid #F3F4F6;
+            font-size: 0.9em;
         }
 
-        .controls {
+        .clients-table tr:hover {
+            background: #F9FAFB;
+        }
+
+        .client-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .client-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .client-btn-edit {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        .client-btn-edit:hover {
+            background: #E5E7EB;
+        }
+
+        .client-btn-delete {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .client-btn-delete:hover {
+            background: #FCA5A5;
+        }
+
+        .location-link {
+            color: #4ADE80;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .location-link:hover {
+            text-decoration: underline;
+        }
+
+        .empty-clients {
+            text-align: center;
+            padding: 40px;
+            color: #9CA3AF;
+        }
+
+        /* Header Compacto */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .header-grid {
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .logo-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            background: #F9FAFB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .logo-box:hover {
+            opacity: 0.8;
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-placeholder {
+            font-size: 24px;
+            opacity: 0.3;
+        }
+
+        .header-fields {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .field-label {
+            font-size: 0.7em;
+            color: #6B7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .field-input {
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.9em;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: #4ADE80;
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+        }
+
+        .efficiency-display {
+            background: linear-gradient(135deg, #1E3A2F 0%, #2D5A47 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(30, 58, 47, 0.3);
+            min-width: 120px;
+        }
+
+        .efficiency-label {
+            font-size: 0.65em;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .efficiency-value {
+            font-size: 2em;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* Days */
+        .days-wrapper {
+            display: flex;
             flex-direction: column;
             gap: 12px;
-            padding: 12px;
-        }
-
-        .logo-area {
-            width: 100%;
         }
 
         .day-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
             padding: 16px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.3s;
+        }
+
+        .day-card.collapsed {
+            max-height: 70px;
+            overflow: hidden;
+        }
+
+        .day-card.sunday {
+            background: linear-gradient(135deg, #1E3A2F 0%, #2D5A47 100%);
+            color: white;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
             margin-bottom: 12px;
         }
 
-        .visit-item {
-            grid-template-columns: 1fr;
-            gap: 8px;
-            padding: 12px;
+        .day-card.sunday .day-header {
+            border-bottom-color: rgba(255, 255, 255, 0.2);
         }
 
-        .visit-field {
-            border-bottom: 1px solid #F3F4F6;
-            padding-bottom: 8px;
+        .day-info {
+            flex: 1;
         }
 
-        .visit-field:last-of-type {
-            border-bottom: none;
-            padding-bottom: 0;
+        .day-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 2px;
         }
 
-        .checkbox-container {
-            justify-content: flex-start;
+        .day-date {
+            font-size: 0.85em;
+            opacity: 0.7;
         }
 
-        .print-btn,
-        .add-day-btn,
-        .new-client-btn {
-            width: 56px;
-            height: 56px;
-            bottom: 20px;
+        .day-actions {
+            display: flex;
+            gap: 4px;
         }
 
-        .print-btn {
-            right: 20px;
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: inherit;
         }
 
-        .add-day-btn {
-            right: 90px;
+        .icon-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
         }
 
-        .new-client-btn {
-            right: 160px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        body {
-            padding: 8px;
-            padding-bottom: 90px;
+        .day-card.sunday .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        .header {
-            padding: 12px;
+        .icon-btn-danger:hover {
+            background: rgba(220, 38, 38, 0.1) !important;
+            color: #DC2626 !important;
         }
 
-        .day-card {
-            padding: 12px;
+        .day-card.sunday .icon-btn-danger:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
         }
 
-        .day-title {
-            font-size: 1em;
+        .collapse-icon {
+            transition: transform 0.2s;
         }
 
-        .print-btn,
-        .add-day-btn,
-        .new-client-btn {
-            width: 50px;
-            height: 50px;
-            bottom: 16px;
-        }
-
-        .print-btn {
-            right: 16px;
-        }
-
-        .add-day-btn {
-            right: 80px;
-        }
-
-        .new-client-btn {
-            right: 144px;
-        }
-    }
-
-    /* Print Styles */
-    @media print {
-        @page {
-            size: A4;
-            margin: 15mm;
-        }
-
-        body {
-            background: white;
-            padding: 0;
-            margin: 0;
-        }
-
-        .container {
-            max-width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        .controls,
-        .print-btn,
-        .add-day-btn,
-        .new-client-btn,
-        .export-menu,
-        .add-visit-btn-inline,
-        .delete-visit-btn,
-        .day-icon-btn {
-            display: none !important;
-        }
-
-        .header {
-            page-break-after: avoid;
-            margin-bottom: 10mm;
-        }
-
-        .day-card {
-            box-shadow: none;
-            page-break-inside: avoid;
-            margin-bottom: 5mm;
-            border: 1px solid #E5E7EB;
-        }
-
-        .day-card.sunday,
-        .day-card.holiday {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-            color-adjust: exact;
+        .day-card.collapsed .collapse-icon {
+            transform: rotate(180deg);
         }
 
         .day-content {
-            display: block !important;
+            display: block;
         }
 
-        .visit-item {
-            page-break-inside: avoid;
+        .day-card.collapsed .day-content {
+            display: none;
         }
-    }
 
-    #logoInput {
-        display: none;
-    }
-</style>
-```
+        .add-visit-inline {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #4ADE80;
+            background: transparent;
+            color: #4ADE80;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+        }
 
+        .add-visit-inline:hover {
+            background: #4ADE80;
+            color: white;
+        }
+
+        .day-card.sunday .add-visit-inline {
+            border-color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .day-card.sunday .add-visit-inline:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: white;
+            color: white;
+        }
+
+        /* Visits */
+        .visits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .visit-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #F3F4F6;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1.5fr auto auto;
+            gap: 12px;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .day-card.sunday .visit-card {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .visit-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .visit-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .visit-label {
+            font-size: 0.7em;
+            color: #6B7280;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .visit-text {
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #1A1A1A;
+        }
+
+        .visit-checkbox {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #4ADE80;
+        }
+
+        .visit-delete {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            color: #DC2626;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .visit-delete:hover {
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 24px;
+            color: #9CA3AF;
+            font-size: 0.9em;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        .modal-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 0.85em;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .form-input,
+        .form-select {
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.95em;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #4ADE80;
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+        }
+
+        .form-input:disabled {
+            background: #F9FAFB;
+            color: #9CA3AF;
+            cursor: not-allowed;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4ADE80 0%, #3ECE72 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(74, 222, 128, 0.4);
+        }
+
+        .btn-secondary {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+        }
+
+        /* Floating Buttons */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 12px;
+            z-index: 999;
+        }
+
+        .fab {
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .fab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .fab-primary {
+            background: linear-gradient(135deg, #4ADE80 0%, #3ECE72 100%);
+            color: white;
+        }
+
+        .fab-secondary {
+            background: linear-gradient(135deg, #1E3A2F 0%, #2D5A47 100%);
+            color: white;
+        }
+
+        /* Export Menu */
+        .export-menu {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E5E7EB;
+            overflow: hidden;
+            z-index: 1000;
+            min-width: 160px;
+            display: none;
+        }
+
+        .export-menu.active {
+            display: block;
+        }
+
+        .export-item {
+            width: 100%;
+            padding: 12px 16px;
+            background: white;
+            border: none;
+            border-bottom: 1px solid #F3F4F6;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+            text-align: left;
+        }
+
+        .export-item:last-child {
+            border-bottom: none;
+        }
+
+        .export-item:hover {
+            background: #F9FAFB;
+        }
+
+        .export-item-danger:hover {
+            background: #FEE2E2;
+        }
+
+        .export-item svg {
+            width: 16px;
+            height: 16px;
+            stroke: #4ADE80;
+        }
+
+        .export-item-danger svg {
+            stroke: #DC2626;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+                padding-bottom: 100px;
+            }
+
+            .header-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .efficiency-display {
+                width: 100%;
+            }
+
+            .visit-card {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .visit-info {
+                padding-bottom: 8px;
+                border-bottom: 1px solid #F3F4F6;
+            }
+
+            .visit-info:last-of-type {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .fab-container {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .fab {
+                width: 52px;
+                height: 52px;
+            }
+        }
+
+        /* Print */
+        @media print {
+            @page { size: A4; margin: 15mm; }
+            body { background: white; padding: 0; }
+            .fab-container, .export-menu, .day-actions, .add-visit-inline, .visit-delete { display: none !important; }
+            .day-card { page-break-inside: avoid; box-shadow: none; border: 1px solid #E5E7EB; }
+            .day-card.sunday { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .day-content { display: block !important; }
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="header-top">
-                <div class="logo-container" onclick="document.getElementById('logoInput').click()">
+            <div class="header-grid">
+                <div class="logo-box" onclick="document.getElementById('logoUpload').click()">
                     <span class="logo-placeholder" id="logoPlaceholder">🏢</span>
-                    <img id="logoImg" style="display: none;" alt="Logo">
+                    <img id="logoImage" style="display: none;">
                 </div>
-                <input type="file" id="logoInput" accept="image/png,image/jpeg,image/jpg">
+                <input type="file" id="logoUpload" accept="image/*">
 
-```
-            <div class="header-info">
-                <div class="info-field">
-                    <label class="info-label">Consultor</label>
-                    <input type="text" class="info-input" id="consultorName" placeholder="Nome do consultor">
+                <div class="header-fields">
+                    <div class="field">
+                        <label class="field-label">Consultor</label>
+                        <input type="text" class="field-input" id="consultor" placeholder="Nome">
+                    </div>
+                    <div class="field">
+                        <label class="field-label">Cidade</label>
+                        <input type="text" class="field-input" id="cidade" placeholder="Cidade">
+                    </div>
+                    <div class="field">
+                        <label class="field-label">Regional</label>
+                        <input type="text" class="field-input" id="regional" placeholder="Regional">
+                    </div>
+                    <div class="field">
+                        <label class="field-label">Data Base</label>
+                        <input type="date" class="field-input" id="dataBase">
+                    </div>
+                    <div class="field">
+                        <label class="field-label">Empresa</label>
+                        <input type="text" class="field-input" id="empresa" placeholder="Empresa">
+                    </div>
+                    <div class="field">
+                        <label class="field-label">Supervisor</label>
+                        <input type="text" class="field-input" id="supervisor" placeholder="Nome">
+                    </div>
                 </div>
-                <div class="info-field">
-                    <label class="info-label">Cidade</label>
-                    <input type="text" class="info-input" id="cidade" placeholder="Cidade">
+
+                <div class="efficiency-display">
+                    <div class="efficiency-label">Eficiência</div>
+                    <div class="efficiency-value" id="efficiencyPercent">0%</div>
                 </div>
-                <div class="info-field">
-                    <label class="info-label">Regional</label>
-                    <input type="text" class="info-input" id="regional" placeholder="Regional">
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab('planning')">Planejamento</button>
+            <button class="tab-btn" onclick="switchTab('clients')">Clientes</button>
+        </div>
+
+        <!-- Planning Tab -->
+        <div class="tab-content active" id="planningTab">
+            <!-- Days -->
+            <div class="days-wrapper" id="daysContainer"></div>
+        </div>
+
+        <!-- Clients Tab -->
+        <div class="tab-content" id="clientsTab">
+            <div class="clients-wrapper">
+                <div class="clients-header">
+                    <h2 class="clients-title">Clientes Cadastrados</h2>
+                    <button class="btn btn-primary" onclick="openClientEditModal()">+ Novo Cliente</button>
                 </div>
-                <div class="info-field">
-                    <label class="info-label">Data</label>
-                    <input type="date" class="info-input" id="data">
-                </div>
-                <div class="info-field">
-                    <label class="info-label">Empresa</label>
-                    <input type="text" class="info-input" id="empresa" placeholder="Nome da empresa">
-                </div>
-                <div class="info-field">
-                    <label class="info-label">Supervisor/Gerente</label>
-                    <input type="text" class="info-input" id="supervisor" placeholder="Nome do supervisor">
-                </div>
-                <div class="efficiency-badge">
-                    <div class="efficiency-label">Eficiência de Visitas</div>
-                    <div class="efficiency-value" id="efficiencyValue">0%</div>
-                </div>
+                <div id="clientsTableContainer"></div>
             </div>
         </div>
     </div>
 
-    <!-- Controls -->
-    <div class="controls">
-        <div class="logo-area" onclick="document.getElementById('logoInput').click()">
-            <span class="logo-text" id="logoText">Logo</span>
-            <img id="logoImgControl" style="display: none;" alt="Logo">
-        </div>
+    <!-- Floating Buttons -->
+    <div class="fab-container">
+        <button class="fab fab-export fab-primary" onclick="toggleExportMenu()" title="Exportar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+        </button>
+        <button class="fab fab-secondary" onclick="addDay()" title="Adicionar Dia">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
     </div>
 
-    <!-- Week Container -->
-    <div class="week-container" id="weekContainer"></div>
-</div>
+    <!-- Export Menu -->
+    <div class="export-menu" id="exportMenu">
+        <button class="export-item" onclick="window.print(); toggleExportMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Imprimir
+        </button>
+        <button class="export-item" onclick="exportPDF(); toggleExportMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            Exportar PDF
+        </button>
+        <button class="export-item export-item-danger" onclick="clearData(); toggleExportMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Limpar Tudo
+        </button>
+    </div>
 
-<!-- Export Menu -->
-<div class="export-menu" id="exportMenu" style="display: none;">
-    <button class="export-option" onclick="window.print(); closeExportMenu()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 6 2 18 2 18 9"></polyline>
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-            <rect x="6" y="14" width="12" height="8"></rect>
-        </svg>
-        <span>Imprimir</span>
-    </button>
-    <button class="export-option" onclick="exportToPDF(); closeExportMenu()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-        </svg>
-        <span>Exportar PDF</span>
-    </button>
-    <button class="export-option" onclick="exportToHTML(); closeExportMenu()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="16 18 22 12 16 6"></polyline>
-            <polyline points="8 6 2 12 8 18"></polyline>
-        </svg>
-        <span>Exportar HTML</span>
-    </button>
-    <button class="export-option export-option-danger" onclick="clearAllData(); closeExportMenu()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-        </svg>
-        <span>Limpar Dados</span>
-    </button>
-</div>
-
-<!-- Floating Buttons -->
-<button class="print-btn" onclick="toggleExportMenu()" title="Exportar">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="6 9 6 2 18 2 18 9"></polyline>
-        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-        <rect x="6" y="14" width="12" height="8"></rect>
-    </svg>
-</button>
-
-<button class="add-day-btn" onclick="addNewDay()" title="Adicionar Dia">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-        <line x1="16" y1="2" x2="16" y2="6"></line>
-        <line x1="8" y1="2" x2="8" y2="6"></line>
-        <line x1="3" y1="10" x2="21" y2="10"></line>
-        <line x1="12" y1="14" x2="12" y2="18"></line>
-        <line x1="10" y1="16" x2="14" y2="16"></line>
-    </svg>
-</button>
-
-<button class="new-client-btn" onclick="openClientModal()" title="Novo Cliente">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <line x1="19" y1="8" x2="19" y2="14"></line>
-        <line x1="22" y1="11" x2="16" y2="11"></line>
-    </svg>
-</button>
-
-<!-- Modal for New Visit -->
-<div class="modal" id="visitModal">
-    <div class="modal-content">
-        <h2 class="modal-title">Nova Visita</h2>
-        <div class="modal-form">
-            <div class="form-group">
-                <label class="form-label">Cliente</label>
-                <select class="form-select" id="clientSelect" onchange="handleClientSelection()">
-                    <option value="">-- Selecione um cliente --</option>
-                    <option value="new">+ Novo Cliente</option>
-                </select>
-            </div>
-            
-            <div id="clientDataFields" style="display: none;">
-                <div class="form-group">
+    <!-- Modal Visit -->
+    <div class="modal-overlay" id="visitModal">
+        <div class="modal-box">
+            <h2 class="modal-title">Nova Visita</h2>
+            <div class="modal-body">
+                <div class="form-field">
                     <label class="form-label">Nome do Cliente</label>
-                    <input type="text" class="form-input" id="visitClientName" placeholder="Nome do cliente">
+                    <input type="text" class="form-input" id="visitClientName" placeholder="Nome completo">
                 </div>
-                <div class="form-group">
+                <div class="form-field">
                     <label class="form-label">Fazenda</label>
                     <input type="text" class="form-input" id="visitClientFarm" placeholder="Nome da fazenda">
                 </div>
-                <div class="form-group">
+                <div class="form-field">
                     <label class="form-label">Localização</label>
                     <input type="text" class="form-input" id="visitClientLocation" placeholder="Cidade/Estado">
                 </div>
-            </div>
+                <div class="form-field">
+                    <label class="form-label">Objetivo da Visita</label>
+                    <input type="text" class="form-input" id="visitObjective" placeholder="Descreva o objetivo">
+                </div>
 
-            <div class="form-group">
-                <label class="form-label">Objetivo da Visita</label>
-                <input type="text" class="form-input" id="visitObjective" placeholder="Descreva o objetivo">
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeVisitModal()">Cancelar</button>
-                <button class="btn" onclick="saveVisit()">Adicionar Visita</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for New Client -->
-<div class="modal" id="clientModal">
-    <div class="modal-content">
-        <h2 class="modal-title">Novo Cliente</h2>
-        <div class="modal-form">
-            <div class="form-group">
-                <label class="form-label">Nome do Cliente</label>
-                <input type="text" class="form-input" id="newClientName" placeholder="Nome completo">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Fazenda</label>
-                <input type="text" class="form-input" id="newClientFarm" placeholder="Nome da fazenda">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Localização</label>
-                <input type="text" class="form-input" id="newClientLocation" placeholder="Cidade/Estado">
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeClientModal()">Cancelar</button>
-                <button class="btn" onclick="saveNewClient()">Salvar Cliente</button>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeVisitModal()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="saveVisit()">Adicionar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    let currentDayIndex = null;
-    const weekDays = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-    const holidays = [];
+    <!-- Modal Client Edit -->
+    <div class="modal-overlay" id="clientEditModal">
+        <div class="modal-box">
+            <h2 class="modal-title" id="clientEditTitle">Editar Cliente</h2>
+            <div class="modal-body">
+                <div class="form-field">
+                    <label class="form-label">Nome do Cliente</label>
+                    <input type="text" class="form-input" id="editClientName" placeholder="Nome completo">
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Fazenda</label>
+                    <input type="text" class="form-input" id="editClientFarm" placeholder="Nome da fazenda">
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Cidade</label>
+                    <input type="text" class="form-input" id="editClientCity" placeholder="Cidade">
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Descrição da Localização (opcional)</label>
+                    <input type="text" class="form-input" id="editClientLocationText" placeholder="Ex: Próximo ao posto, entrada pela estrada de terra">
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Link do Google Maps (opcional)</label>
+                    <input type="text" class="form-input" id="editClientLocationLink" placeholder="Cole o link do Google Maps">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-field">
+                        <label class="form-label">Latitude (opcional)</label>
+                        <input type="text" class="form-input" id="editClientLat" placeholder="-23.5505">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Longitude (opcional)</label>
+                        <input type="text" class="form-input" id="editClientLng" placeholder="-46.6333">
+                    </div>
+                </div>
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-        loadData();
-        renderWeek();
-        setupEventListeners();
-        calculateEfficiency();
-    });
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeClientEditModal()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="saveClientEdit()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    function setupEventListeners() {
-        const inputs = ['consultorName', 'cidade', 'regional', 'data', 'empresa', 'supervisor'];
-        inputs.forEach(id => {
-            document.getElementById(id).addEventListener('input', saveData);
-        });
+    <script>
+        // ==================== STATE ====================
+        const STORAGE_KEY = 'weeklyPlanner';
+        const LOGO_KEY = 'plannerLogo';
+        let currentDayIndex = null;
+        let currentClientIndex = null;
+        let state = {
+            consultor: '',
+            cidade: '',
+            regional: '',
+            dataBase: '',
+            empresa: '',
+            supervisor: '',
+            clients: [],
+            days: {}
+        };
 
-        document.getElementById('logoInput').addEventListener('change', handleLogoUpload);
-    }
+        // ==================== INIT ====================
+        function init() {
+            loadState();
+            setupListeners();
+            renderDays();
+            renderClients();
+            updateEfficiency();
+        }
 
-    function handleLogoUpload(e) {
-        const file = e.target.files[0];
-        if (file) {
+        // ==================== TABS ====================
+        function switchTab(tabName) {
+            // Atualizar botões
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Atualizar conteúdo
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tabName === 'planning') {
+                document.getElementById('planningTab').classList.add('active');
+            } else if (tabName === 'clients') {
+                document.getElementById('clientsTab').classList.add('active');
+                renderClients();
+            }
+        }
+
+        function setupListeners() {
+            ['consultor', 'cidade', 'regional', 'dataBase', 'empresa', 'supervisor'].forEach(id => {
+                document.getElementById(id).addEventListener('input', () => {
+                    state[id] = document.getElementById(id).value;
+                    saveState();
+                });
+            });
+
+            document.getElementById('logoUpload').addEventListener('change', handleLogoUpload);
+            
+            // Fechar menu ao clicar fora
+            document.addEventListener('click', (e) => {
+                const menu = document.getElementById('exportMenu');
+                const fab = document.querySelector('.fab-export');
+                if (!menu.contains(e.target) && !fab.contains(e.target)) {
+                    menu.classList.remove('active');
+                }
+            });
+        }
+
+        // ==================== STORAGE ====================
+        function loadState() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                state = JSON.parse(saved);
+            }
+            
+            // Preencher campos
+            document.getElementById('consultor').value = state.consultor || '';
+            document.getElementById('cidade').value = state.cidade || '';
+            document.getElementById('regional').value = state.regional || '';
+            document.getElementById('dataBase').value = state.dataBase || new Date().toISOString().split('T')[0];
+            document.getElementById('empresa').value = state.empresa || '';
+            document.getElementById('supervisor').value = state.supervisor || '';
+
+            // Logo
+            const logo = localStorage.getItem(LOGO_KEY);
+            if (logo) {
+                document.getElementById('logoImage').src = logo;
+                document.getElementById('logoImage').style.display = 'block';
+                document.getElementById('logoPlaceholder').style.display = 'none';
+            }
+
+            // Inicializar dias se vazio
+            if (!state.days || Object.keys(state.days).length === 0) {
+                for (let i = 0; i < 7; i++) {
+                    state.days[i] = [];
+                }
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+
+        function handleLogoUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
             const reader = new FileReader();
-            reader.onload = function(event) {
-                const logoImg = document.getElementById('logoImg');
-                const logoPlaceholder = document.getElementById('logoPlaceholder');
-                const logoImgControl = document.getElementById('logoImgControl');
-                const logoText = document.getElementById('logoText');
+            reader.onload = (event) => {
+                const img = document.getElementById('logoImage');
+                const placeholder = document.getElementById('logoPlaceholder');
                 
-                logoImg.src = event.target.result;
-                logoImg.style.display = 'block';
-                logoPlaceholder.style.display = 'none';
+                img.src = event.target.result;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
                 
-                logoImgControl.src = event.target.result;
-                logoImgControl.style.display = 'block';
-                logoText.style.display = 'none';
-                
-                localStorage.setItem('plannerLogo', event.target.result);
+                localStorage.setItem(LOGO_KEY, event.target.result);
             };
             reader.readAsDataURL(file);
         }
-    }
 
-    function renderWeek() {
-        const container = document.getElementById('weekContainer');
-        container.innerHTML = '';
+        // ==================== RENDER ====================
+        function renderDays() {
+            const container = document.getElementById('daysContainer');
+            container.innerHTML = '';
 
-        const data = getData();
-        const baseDate = document.getElementById('data').value ? new Date(document.getElementById('data').value + 'T00:00:00') : new Date();
-
-        const dayIndices = data.visits && Object.keys(data.visits).length > 0 
-            ? Object.keys(data.visits).map(k => parseInt(k)).sort((a, b) => a - b)
-            : [0, 1, 2, 3, 4, 5, 6];
-
-        dayIndices.forEach(i => {
-            const currentDate = new Date(baseDate);
-            currentDate.setDate(baseDate.getDate() + i);
+            const baseDate = new Date(state.dataBase || new Date());
+            const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
             
-            const dayOfWeek = currentDate.getDay();
-            const dateStr = formatDate(currentDate);
-            const isSunday = dayOfWeek === 0;
-            const isHoliday = holidays.includes(dateStr);
+            const indices = Object.keys(state.days).map(k => parseInt(k)).sort((a, b) => a - b);
 
-            const dayCard = document.createElement('div');
-            dayCard.className = `day-card ${isSunday ? 'sunday' : ''} ${isHoliday ? 'holiday' : ''}`;
-            dayCard.setAttribute('data-day-index', i);
+            indices.forEach(idx => {
+                const date = new Date(baseDate);
+                date.setDate(date.getDate() + idx);
+                
+                const dayOfWeek = date.getDay();
+                const dateStr = date.toLocaleDateString('pt-BR');
+                const isSunday = dayOfWeek === 0;
+                
+                const visits = state.days[idx] || [];
 
-            const visits = data.visits[i] || [];
-
-            dayCard.innerHTML = `
-                <div class="day-header">
-                    <div>
-                        <div class="day-title">${weekDays[dayOfWeek]}</div>
-                        <div class="day-date">${dateStr}</div>
+                const dayCard = document.createElement('div');
+                dayCard.className = `day-card ${isSunday ? 'sunday' : ''}`;
+                dayCard.setAttribute('data-day-index', idx);
+                dayCard.innerHTML = `
+                    <div class="day-header">
+                        <div class="day-info">
+                            <div class="day-name">${dayNames[dayOfWeek]}</div>
+                            <div class="day-date">${dateStr}</div>
+                        </div>
+                        <div class="day-actions">
+                            <button class="icon-btn" onclick="toggleDay(${idx})">
+                                <svg class="collapse-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                            </button>
+                            <button class="icon-btn icon-btn-danger" onclick="clearDayVisits(${idx})" title="Limpar visitas">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="day-actions">
-                        <button class="day-icon-btn" onclick="toggleDayCardByIndex(${i})" title="Expandir/Recolher">
-                            <svg class="collapse-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="18 15 12 9 6 15"></polyline>
-                            </svg>
-                        </button>
-                        <button class="day-icon-btn day-icon-remove" onclick="removeDayByIndex(${i}); event.stopPropagation();" title="Remover Dia">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
+                    <div class="day-content">
+                        <button class="add-visit-inline" onclick="openVisitModal(${idx})">+ Adicionar Visita</button>
+                        <div class="visits-list">
+                            ${visits.length === 0 ? '<div class="empty-state">Nenhuma visita agendada</div>' : renderVisits(idx, visits)}
+                        </div>
                     </div>
-                </div>
-                <div class="day-content" id="day-content-${i}">
-                    <button class="add-visit-btn-inline" onclick="openVisitModal(${i})">+ Adicionar Visita</button>
-                    <div class="visits-list" id="visits-${i}">
-                        ${visits.length === 0 ? '<div style="text-align: center; color: #6B7280; padding: 20px;">Nenhuma visita agendada</div>' : ''}
-                    </div>
-                </div>
-            `;
+                `;
 
-            container.appendChild(dayCard);
-            renderVisits(i);
-        });
-    }
+                container.appendChild(dayCard);
+            });
 
-    function renderVisits(dayIndex) {
-        const data = getData();
-        const visits = data.visits[dayIndex] || [];
-        const container = document.getElementById(`visits-${dayIndex}`);
-
-        if (visits.length === 0) {
-            container.innerHTML = '<div style="text-align: center; color: #6B7280; padding: 20px;">Nenhuma visita agendada</div>';
-            return;
+            // Anexar event listeners depois de renderizar
+            attachVisitListeners();
         }
 
-        container.innerHTML = visits.map((visit, visitIndex) => `
-            <div class="visit-item">
-                <div class="visit-field">
-                    <div class="visit-label">Cliente</div>
-                    <div class="visit-value">${visit.client}</div>
+        function renderVisits(dayIdx, visits) {
+            return visits.map((v, vIdx) => `
+                <div class="visit-card">
+                    <div class="visit-info">
+                        <div class="visit-label">Cliente</div>
+                        <div class="visit-text">${v.client}</div>
+                    </div>
+                    <div class="visit-info">
+                        <div class="visit-label">Fazenda</div>
+                        <div class="visit-text">${v.farm}</div>
+                    </div>
+                    <div class="visit-info">
+                        <div class="visit-label">Localização</div>
+                        <div class="visit-text">${v.location}</div>
+                    </div>
+                    <div class="visit-info">
+                        <div class="visit-label">Objetivo</div>
+                        <div class="visit-text">${v.objective}</div>
+                    </div>
+                    <input type="checkbox" class="visit-checkbox" ${v.completed ? 'checked' : ''} data-day="${dayIdx}" data-visit="${vIdx}">
+                    <button class="visit-delete" data-day="${dayIdx}" data-visit="${vIdx}">×</button>
                 </div>
-                <div class="visit-field">
-                    <div class="visit-label">Fazenda</div>
-                    <div class="visit-value">${visit.farm || '-'}</div>
-                </div>
-                <div class="visit-field">
-                    <div class="visit-label">Localização</div>
-                    <div class="visit-value">${visit.location || '-'}</div>
-                </div>
-                <div class="visit-field">
-                    <div class="visit-label">Objetivo</div>
-                    <div class="visit-value">${visit.objective}</div>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="checkbox" ${visit.completed ? 'checked' : ''} 
-                           onchange="toggleVisit(${dayIndex}, ${visitIndex})">
-                </div>
-                <button class="delete-visit-btn" onclick="deleteVisit(${dayIndex}, ${visitIndex})">×</button>
-            </div>
-        `).join('');
-    }
+            `).join('');
+        }
 
-    function openVisitModal(dayIndex) {
-        currentDayIndex = dayIndex;
-        
-        // Popular dropdown com clientes
-        const data = getData();
-        const clientSelect = document.getElementById('clientSelect');
-        clientSelect.innerHTML = '<option value="">-- Selecione um cliente --</option>';
-        clientSelect.innerHTML += '<option value="new">+ Novo Cliente</option>';
-        
-        if (data.clients && data.clients.length > 0) {
-            data.clients.forEach((client, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = `${client.name} - ${client.farm} (${client.location})`;
-                clientSelect.appendChild(option);
+        function attachVisitListeners() {
+            // Checkboxes
+            document.querySelectorAll('.visit-checkbox').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const dayIdx = parseInt(this.getAttribute('data-day'));
+                    const visitIdx = parseInt(this.getAttribute('data-visit'));
+                    toggleVisit(dayIdx, visitIdx);
+                });
+            });
+
+            // Delete buttons
+            document.querySelectorAll('.visit-delete').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const dayIdx = parseInt(this.getAttribute('data-day'));
+                    const visitIdx = parseInt(this.getAttribute('data-visit'));
+                    deleteVisit(dayIdx, visitIdx);
+                });
             });
         }
-        
-        // Resetar campos
-        document.getElementById('clientDataFields').style.display = 'none';
-        document.getElementById('visitClientName').value = '';
-        document.getElementById('visitClientName').disabled = false;
-        document.getElementById('visitClientFarm').value = '';
-        document.getElementById('visitClientFarm').disabled = false;
-        document.getElementById('visitClientLocation').value = '';
-        document.getElementById('visitClientLocation').disabled = false;
-        document.getElementById('visitObjective').value = '';
-        
-        document.getElementById('visitModal').classList.add('active');
-        document.getElementById('clientSelect').focus();
-    }
 
-    function handleClientSelection() {
-        const select = document.getElementById('clientSelect');
-        const selectedValue = select.value;
-        const clientFields = document.getElementById('clientDataFields');
-        const nameField = document.getElementById('visitClientName');
-        const farmField = document.getElementById('visitClientFarm');
-        const locationField = document.getElementById('visitClientLocation');
-        
-        if (selectedValue === '') {
-            clientFields.style.display = 'none';
-            nameField.value = '';
-            farmField.value = '';
-            locationField.value = '';
-            return;
-        }
-        
-        clientFields.style.display = 'block';
-        
-        if (selectedValue === 'new') {
-            // Novo cliente - campos editáveis vazios
-            nameField.value = '';
-            nameField.disabled = false;
-            farmField.value = '';
-            farmField.disabled = false;
-            locationField.value = '';
-            locationField.disabled = false;
-            nameField.focus();
-        } else {
-            // Cliente existente - preencher e bloquear
-            const data = getData();
-            const client = data.clients[selectedValue];
-            
-            if (client) {
-                nameField.value = client.name;
-                nameField.disabled = true;
-                farmField.value = client.farm;
-                farmField.disabled = true;
-                locationField.value = client.location;
-                locationField.disabled = true;
-                document.getElementById('visitObjective').focus();
+        function toggleDay(idx) {
+            const card = document.querySelector(`.day-card[data-day-index="${idx}"]`);
+            if (card) {
+                card.classList.toggle('collapsed');
             }
         }
-    }
 
-    function closeVisitModal() {
-        document.getElementById('visitModal').classList.remove('active');
-        currentDayIndex = null;
-    }
-
-    function saveVisit() {
-        const clientName = document.getElementById('visitClientName').value.trim();
-        const farm = document.getElementById('visitClientFarm').value.trim();
-        const location = document.getElementById('visitClientLocation').value.trim();
-        const objective = document.getElementById('visitObjective').value.trim();
-        const clientSelect = document.getElementById('clientSelect').value;
-
-        if (!clientName || !farm || !location || !objective) {
-            alert('Preencha todos os campos');
-            return;
+        function clearDayVisits(idx) {
+            if (!confirm('Limpar todas as visitas deste dia?')) return;
+            
+            state.days[idx] = [];
+            saveState();
+            renderDays();
+            updateEfficiency();
         }
 
-        // Se for novo cliente, salvar na lista de clientes
-        if (clientSelect === 'new') {
-            const data = getData();
-            if (!data.clients) data.clients = [];
+        function addDay() {
+            let nextIdx = 0;
+            while (state.days[nextIdx] !== undefined) nextIdx++;
             
-            // Verificar se cliente já existe
-            const existingClient = data.clients.find(c => 
-                c.name.toLowerCase() === clientName.toLowerCase() &&
+            if (nextIdx >= 30) {
+                alert('Limite de 30 dias atingido');
+                return;
+            }
+            
+            state.days[nextIdx] = [];
+            saveState();
+            renderDays();
+        }
+
+        // ==================== VISITS ====================
+        function openVisitModal(dayIdx) {
+            currentDayIndex = dayIdx;
+            
+            // Limpar campos
+            document.getElementById('visitClientName').value = '';
+            document.getElementById('visitClientFarm').value = '';
+            document.getElementById('visitClientLocation').value = '';
+            document.getElementById('visitObjective').value = '';
+            
+            document.getElementById('visitModal').classList.add('active');
+            document.getElementById('visitClientName').focus();
+        }
+
+        function closeVisitModal() {
+            document.getElementById('visitModal').classList.remove('active');
+            currentDayIndex = null;
+        }
+
+        function saveVisit() {
+            const name = document.getElementById('visitClientName').value.trim();
+            const farm = document.getElementById('visitClientFarm').value.trim();
+            const location = document.getElementById('visitClientLocation').value.trim();
+            const objective = document.getElementById('visitObjective').value.trim();
+
+            if (!name || !farm || !location || !objective) {
+                alert('Preencha todos os campos');
+                return;
+            }
+
+            // Criar cliente automaticamente se não existir
+            const exists = state.clients.find(c => 
+                c.name.toLowerCase() === name.toLowerCase() && 
                 c.farm.toLowerCase() === farm.toLowerCase()
             );
             
-            if (!existingClient) {
-                data.clients.push({ name: clientName, farm: farm, location: location });
-                saveDataObject(data);
-            }
-        }
-
-        // Adicionar visita
-        const data = getData();
-        if (!data.visits[currentDayIndex]) {
-            data.visits[currentDayIndex] = [];
-        }
-
-        data.visits[currentDayIndex].push({
-            client: clientName,
-            farm: farm,
-            location: location,
-            objective: objective,
-            completed: false
-        });
-
-        saveDataObject(data);
-        renderVisits(currentDayIndex);
-        calculateEfficiency();
-        closeVisitModal();
-    }
-
-    function toggleVisit(dayIndex, visitIndex) {
-        const data = getData();
-        data.visits[dayIndex][visitIndex].completed = !data.visits[dayIndex][visitIndex].completed;
-        saveDataObject(data);
-        calculateEfficiency();
-    }
-
-    function deleteVisit(dayIndex, visitIndex) {
-        if (!confirm('Deseja realmente excluir esta visita?')) return;
-
-        const data = getData();
-        data.visits[dayIndex].splice(visitIndex, 1);
-        saveDataObject(data);
-        renderVisits(dayIndex);
-        calculateEfficiency();
-    }
-
-    function openClientModal() {
-        document.getElementById('clientModal').classList.add('active');
-        document.getElementById('newClientName').focus();
-    }
-
-    function closeClientModal() {
-        document.getElementById('clientModal').classList.remove('active');
-        document.getElementById('newClientName').value = '';
-        document.getElementById('newClientFarm').value = '';
-        document.getElementById('newClientLocation').value = '';
-    }
-
-    function saveNewClient() {
-        const name = document.getElementById('newClientName').value.trim();
-        const farm = document.getElementById('newClientFarm').value.trim();
-        const location = document.getElementById('newClientLocation').value.trim();
-
-        if (!name || !farm || !location) {
-            alert('Preencha todos os campos');
-            return;
-        }
-
-        const data = getData();
-        if (!data.clients) data.clients = [];
-        
-        // Verificar duplicados
-        const exists = data.clients.find(c => 
-            c.name.toLowerCase() === name.toLowerCase() &&
-            c.farm.toLowerCase() === farm.toLowerCase()
-        );
-        
-        if (exists) {
-            alert('Este cliente já existe!');
-            return;
-        }
-        
-        data.clients.push({ name, farm, location });
-        saveDataObject(data);
-        closeClientModal();
-        alert('Cliente adicionado com sucesso!');
-    }
-
-    function calculateEfficiency() {
-        const data = getData();
-        let total = 0;
-        let completed = 0;
-
-        Object.values(data.visits).forEach(dayVisits => {
-            dayVisits.forEach(visit => {
-                total++;
-                if (visit.completed) completed++;
-            });
-        });
-
-        const efficiency = total === 0 ? 0 : Math.round((completed / total) * 100);
-        document.getElementById('efficiencyValue').textContent = efficiency + '%';
-    }
-
-    function formatDate(date) {
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    }
-
-    function getData() {
-        const stored = localStorage.getItem('weeklyPlanner');
-        return stored ? JSON.parse(stored) : { visits: {}, clients: [] };
-    }
-
-    function saveData() {
-        const data = getData();
-        data.consultor = document.getElementById('consultorName').value;
-        data.cidade = document.getElementById('cidade').value;
-        data.regional = document.getElementById('regional').value;
-        data.data = document.getElementById('data').value;
-        data.empresa = document.getElementById('empresa').value;
-        data.supervisor = document.getElementById('supervisor').value;
-        
-        saveDataObject(data);
-    }
-
-    function saveDataObject(data) {
-        localStorage.setItem('weeklyPlanner', JSON.stringify(data));
-    }
-
-    function loadData() {
-        const data = getData();
-        
-        document.getElementById('consultorName').value = data.consultor || '';
-        document.getElementById('cidade').value = data.cidade || '';
-        document.getElementById('regional').value = data.regional || '';
-        document.getElementById('data').value = data.data || new Date().toISOString().split('T')[0];
-        document.getElementById('empresa').value = data.empresa || '';
-        document.getElementById('supervisor').value = data.supervisor || '';
-
-        const logo = localStorage.getItem('plannerLogo');
-        if (logo) {
-            const logoImg = document.getElementById('logoImg');
-            const logoPlaceholder = document.getElementById('logoPlaceholder');
-            const logoImgControl = document.getElementById('logoImgControl');
-            const logoText = document.getElementById('logoText');
-            
-            logoImg.src = logo;
-            logoImg.style.display = 'block';
-            logoPlaceholder.style.display = 'none';
-            
-            logoImgControl.src = logo;
-            logoImgControl.style.display = 'block';
-            logoText.style.display = 'none';
-        }
-    }
-
-    function clearAllData() {
-        if (!confirm('Deseja realmente limpar todos os dados? Esta ação não pode ser desfeita.')) return;
-        
-        localStorage.removeItem('weeklyPlanner');
-        localStorage.removeItem('plannerLogo');
-        location.reload();
-    }
-
-    function toggleDayCardByIndex(dayIndex) {
-        const dayCards = document.querySelectorAll('.day-card');
-        const targetCard = Array.from(dayCards).find(card => 
-            parseInt(card.getAttribute('data-day-index')) === dayIndex
-        );
-        
-        if (targetCard) {
-            targetCard.classList.toggle('collapsed');
-        }
-    }
-
-    function removeDayByIndex(dayIndex) {
-        if (!confirm('Deseja realmente remover este dia e todas as visitas?')) return;
-        
-        const data = getData();
-        
-        if (data.visits && data.visits[dayIndex]) {
-            delete data.visits[dayIndex];
-            
-            const sortedIndices = Object.keys(data.visits)
-                .map(k => parseInt(k))
-                .sort((a, b) => a - b);
-            
-            const newVisits = {};
-            sortedIndices.forEach((oldIndex, newIndex) => {
-                newVisits[newIndex] = data.visits[oldIndex];
-            });
-            
-            data.visits = newVisits;
-            
-            saveDataObject(data);
-            renderWeek();
-            calculateEfficiency();
-        }
-    }
-
-    function toggleExportMenu() {
-        const menu = document.getElementById('exportMenu');
-        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function closeExportMenu() {
-        document.getElementById('exportMenu').style.display = 'none';
-    }
-
-    document.addEventListener('click', function(e) {
-        const menu = document.getElementById('exportMenu');
-        const printBtn = document.querySelector('.print-btn');
-        if (menu && printBtn && !menu.contains(e.target) && !printBtn.contains(e.target)) {
-            menu.style.display = 'none';
-        }
-    });
-
-    function addNewDay() {
-        const data = getData();
-        
-        let nextIndex = 0;
-        while (data.visits && data.visits[nextIndex]) {
-            nextIndex++;
-        }
-        
-        if (nextIndex >= 30) {
-            alert('Limite máximo de dias atingido (30 dias)');
-            return;
-        }
-        
-        if (!data.visits) data.visits = {};
-        data.visits[nextIndex] = [];
-        
-        saveDataObject(data);
-        renderWeek();
-        
-        setTimeout(() => {
-            const cards = document.querySelectorAll('.day-card');
-            if (cards[nextIndex]) {
-                cards[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }, 100);
-    }
-
-    async function exportToPDF() {
-        const printContainer = document.querySelector('.container').cloneNode(true);
-        
-        printContainer.querySelectorAll('.controls, .print-btn, .add-day-btn, .new-client-btn, .day-icon-btn, .add-visit-btn-inline, .delete-visit-btn').forEach(el => el.remove());
-        
-        printContainer.querySelectorAll('.day-card').forEach(card => {
-            card.classList.remove('collapsed');
-            const content = card.querySelector('.day-content');
-            if (content) content.style.display = 'block';
-        });
-
-        const tempDiv = document.createElement('div');
-        tempDiv.style.position = 'absolute';
-        tempDiv.style.left = '-9999px';
-        tempDiv.style.top = '0';
-        tempDiv.style.width = '210mm';
-        tempDiv.style.background = 'white';
-        tempDiv.style.padding = '20px';
-        tempDiv.appendChild(printContainer);
-        document.body.appendChild(tempDiv);
-
-        try {
-            const canvas = await html2canvas(tempDiv, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff'
-            });
-
-            const imgData = canvas.toDataURL('image/png');
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            
-            const imgWidth = 210;
-            const pageHeight = 297;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 0;
-
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
+            if (!exists) {
+                // Criar com estrutura nova mas mantendo compatibilidade
+                state.clients.push({ 
+                    name, 
+                    farm, 
+                    location, // Mantém campo antigo para compatibilidade
+                    city: '',
+                    locationText: location,
+                    locationLink: '',
+                    lat: '',
+                    lng: ''
+                });
             }
 
-            const data = getData();
-            const fileName = `planejamento-${data.consultor || 'semanal'}-${new Date().toISOString().split('T')[0]}.pdf`;
-            pdf.save(fileName);
-        } catch (error) {
-            console.error('Erro ao gerar PDF:', error);
-            alert('Erro ao gerar PDF. Tente usar a função de impressão.');
-        } finally {
-            document.body.removeChild(tempDiv);
-        }
-    }
+            // Adicionar visita
+            if (!state.days[currentDayIndex]) {
+                state.days[currentDayIndex] = [];
+            }
 
-    function exportToHTML() {
-        const data = getData();
-        const logo = localStorage.getItem('plannerLogo');
-        
-        let total = 0;
-        let completed = 0;
-        Object.values(data.visits || {}).forEach(dayVisits => {
-            dayVisits.forEach(visit => {
-                total++;
-                if (visit.completed) completed++;
+            state.days[currentDayIndex].push({
+                client: name,
+                farm: farm,
+                location: location,
+                objective: objective,
+                completed: false
             });
-        });
-        const efficiency = total === 0 ? 0 : Math.round((completed / total) * 100);
-        
-        const baseDate = data.data ? new Date(data.data + 'T00:00:00') : new Date();
-        const dayIndices = data.visits && Object.keys(data.visits).length > 0 
-            ? Object.keys(data.visits).map(k => parseInt(k)).sort((a, b) => a - b)
-            : [0, 1, 2, 3, 4, 5, 6];
-        
-        const daysHTML = dayIndices.map(i => {
-            const currentDate = new Date(baseDate);
-            currentDate.setDate(baseDate.getDate() + i);
-            const dayOfWeek = currentDate.getDay();
-            const dateStr = formatDate(currentDate);
-            const isSunday = dayOfWeek === 0;
-            const visits = data.visits[i] || [];
-            const dayClass = isSunday ? 'sunday' : '';
 
-            return `
-                <div class="day-card ${dayClass}">
-                    <div class="day-header">
-                        <div>
-                            <div class="day-title">${weekDays[dayOfWeek]}</div>
-                            <div class="day-date">${dateStr}</div>
-                        </div>
-                    </div>
-                    <div class="visits-list">
-                        ${visits.length === 0 ? '<div class="empty-state">Nenhuma visita agendada</div>' : visits.map(visit => `
-                            <div class="visit-item">
-                                <div class="visit-field">
-                                    <div class="visit-label">Cliente</div>
-                                    <div class="visit-value">${visit.client}</div>
-                                </div>
-                                <div class="visit-field">
-                                    <div class="visit-label">Fazenda</div>
-                                    <div class="visit-value">${visit.farm}</div>
-                                </div>
-                                <div class="visit-field">
-                                    <div class="visit-label">Localização</div>
-                                    <div class="visit-value">${visit.location}</div>
-                                </div>
-                                <div class="visit-field">
-                                    <div class="visit-label">Objetivo</div>
-                                    <div class="visit-value">${visit.objective}</div>
-                                </div>
-                                <div class="visit-field">
-                                    <div class="visit-label">Status</div>
-                                    <div class="visit-value ${visit.completed ? 'visit-completed' : 'visit-pending'}">
-                                        ${visit.completed ? '✓ Concluída' : '○ Pendente'}
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        const htmlContent = `<!DOCTYPE html>
-```
-
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planejamento Semanal - ${data.consultor || 'Consultor'}</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            background: #FFFFFF;
-            padding: 20px;
-            color: #1A1A1A;
-            max-width: 1200px;
-            margin: 0 auto;
+            saveState();
+            renderDays();
+            updateEfficiency();
+            closeVisitModal();
         }
-        .header {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            border: 1px solid #F3F4F6;
-        }
-        .header-top { display: flex; gap: 20px; margin-bottom: 20px; align-items: center; }
-        .logo-container { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
-        .logo-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .header-info { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .info-field { display: flex; flex-direction: column; gap: 4px; }
-        .info-label { font-size: 0.75em; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        .info-value { font-size: 0.95em; padding: 8px 12px; background: #F9FAFB; border-radius: 8px; border: 1px solid #E5E7EB; }
-        .efficiency-badge { grid-column: span 2; background: linear-gradient(135deg, #1E3A2F 0%, #2D5A47 100%); color: white; border-radius: 12px; padding: 16px; text-align: center; }
-        .efficiency-label { font-size: 0.75em; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-        .efficiency-value { font-size: 2em; font-weight: 600; }
-        .day-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid #F3F4F6; }
-        .day-card.sunday { background: linear-gradient(135deg, #1E3A2F 0%, #2D5A47 100%); color: white; border: none; }
-        .day-header { display: flex; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid #F3F4F6; margin-bottom: 16px; }
-        .day-card.sunday .day-header { border-bottom-color: rgba(255, 255, 255, 0.2); }
-        .day-title { font-size: 1.1em; font-weight: 600; margin-bottom: 4px; }
-        .day-date { font-size: 0.9em; color: #6B7280; }
-        .day-card.sunday .day-date { color: rgba(255, 255, 255, 0.8); }
-        .visits-list { display: flex; flex-direction: column; gap: 12px; }
-        .visit-item { background: white; border-radius: 10px; padding: 16px; border: 1px solid #F3F4F6; display: grid; grid-template-columns: 1fr 1fr 1fr 2fr 100px; gap: 12px; align-items: center; }
-        .day-card.sunday .visit-item { background: rgba(255, 255, 255, 0.95); }
-        .visit-field { display: flex; flex-direction: column; gap: 4px; }
-        .visit-label { font-size: 0.75em; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; }
-        .visit-value { font-size: 0.9em; color: #1A1A1A; font-weight: 500; }
-        .visit-completed { color: #4ADE80; font-weight: 600; }
-        .visit-pending { color: #DC2626; font-weight: 600; }
-        .empty-state { text-align: center; color: #6B7280; padding: 20px; font-style: italic; }
-        @media print {
-            @page { size: A4; margin: 15mm; }
-            body { padding: 0; }
-            .day-card { page-break-inside: avoid; margin-bottom: 5mm; }
-            .visit-item { page-break-inside: avoid; }
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <div class="header-top">
-            ${logo ? `<div class="logo-container"><img src="${logo}" alt="Logo"></div>` : ''}
-            <div class="header-info">
-                <div class="info-field"><div class="info-label">Consultor</div><div class="info-value">${data.consultor || '-'}</div></div>
-                <div class="info-field"><div class="info-label">Cidade</div><div class="info-value">${data.cidade || '-'}</div></div>
-                <div class="info-field"><div class="info-label">Regional</div><div class="info-value">${data.regional || '-'}</div></div>
-                <div class="info-field"><div class="info-label">Data</div><div class="info-value">${data.data || '-'}</div></div>
-                <div class="info-field"><div class="info-label">Empresa</div><div class="info-value">${data.empresa || '-'}</div></div>
-                <div class="info-field"><div class="info-label">Supervisor/Gerente</div><div class="info-value">${data.supervisor || '-'}</div></div>
-                <div class="efficiency-badge">
-                    <div class="efficiency-label">Eficiência de Visitas</div>
-                    <div class="efficiency-value">${efficiency}%</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    ${daysHTML}
-</body>
-</html>`;
 
-```
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `planejamento-${data.consultor || 'semanal'}-${new Date().toISOString().split('T')[0]}.html`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-</script>
-```
+        function toggleVisit(dayIdx, visitIdx) {
+            state.days[dayIdx][visitIdx].completed = !state.days[dayIdx][visitIdx].completed;
+            saveState();
+            updateEfficiency();
+        }
 
+        function deleteVisit(dayIdx, visitIdx) {
+            if (!confirm('Excluir esta visita?')) return;
+            
+            state.days[dayIdx].splice(visitIdx, 1);
+            saveState();
+            renderDays();
+            updateEfficiency();
+        }
+
+        // ==================== EFFICIENCY ====================
+        function updateEfficiency() {
+            let total = 0;
+            let completed = 0;
+
+            const baseDate = new Date(state.dataBase || new Date());
+
+            Object.keys(state.days).forEach(dayIdx => {
+                const date = new Date(baseDate);
+                date.setDate(date.getDate() + parseInt(dayIdx));
+                const isSunday = date.getDay() === 0;
+                
+                const visits = state.days[dayIdx];
+                
+                visits.forEach(v => {
+                    // Se é domingo, só conta se a visita estiver concluída
+                    if (isSunday) {
+                        if (v.completed) {
+                            total++;
+                            completed++;
+                        }
+                        // Se não está concluída, ignora completamente
+                    } else {
+                        // Dia normal: sempre conta
+                        total++;
+                        if (v.completed) completed++;
+                    }
+                });
+            });
+
+            const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+            document.getElementById('efficiencyPercent').textContent = percent + '%';
+        }
+
+        // ==================== CLIENTS ====================
+        function renderClients() {
+            const container = document.getElementById('clientsTableContainer');
+            
+            if (!state.clients || state.clients.length === 0) {
+                container.innerHTML = '<div class="empty-clients">Nenhum cliente cadastrado</div>';
+                return;
+            }
+
+            let html = '<table class="clients-table"><thead><tr>';
+            html += '<th>Nome</th>';
+            html += '<th>Fazenda</th>';
+            html += '<th>Cidade</th>';
+            html += '<th>Localização</th>';
+            html += '<th>Ações</th>';
+            html += '</tr></thead><tbody>';
+
+            state.clients.forEach((client, idx) => {
+                html += '<tr>';
+                html += `<td>${client.name}</td>`;
+                html += `<td>${client.farm}</td>`;
+                html += `<td>${client.city || '—'}</td>`;
+                html += `<td>${formatClientLocation(client)}</td>`;
+                html += `<td><div class="client-actions">`;
+                html += `<button class="client-btn client-btn-edit" onclick="editClient(${idx})">Editar</button>`;
+                html += `<button class="client-btn client-btn-delete" onclick="deleteClient(${idx})">Excluir</button>`;
+                html += `</div></td>`;
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function formatClientLocation(client) {
+            // Se tiver link do Google Maps
+            if (client.locationLink) {
+                return `<a href="${client.locationLink}" target="_blank" class="location-link">Abrir no mapa</a>`;
+            }
+            
+            // Se tiver lat/lng, gerar link automático
+            if (client.lat && client.lng) {
+                const mapsUrl = `https://www.google.com/maps?q=${client.lat},${client.lng}`;
+                return `<a href="${mapsUrl}" target="_blank" class="location-link">${client.lat}, ${client.lng}</a>`;
+            }
+            
+            // Se tiver apenas texto de localização (compatibilidade)
+            if (client.location || client.locationText) {
+                return client.location || client.locationText;
+            }
+            
+            return '—';
+        }
+
+        function openClientEditModal(clientIdx = null) {
+            currentClientIndex = clientIdx;
+            
+            if (clientIdx === null) {
+                // Novo cliente
+                document.getElementById('clientEditTitle').textContent = 'Novo Cliente';
+                document.getElementById('editClientName').value = '';
+                document.getElementById('editClientFarm').value = '';
+                document.getElementById('editClientCity').value = '';
+                document.getElementById('editClientLocationText').value = '';
+                document.getElementById('editClientLocationLink').value = '';
+                document.getElementById('editClientLat').value = '';
+                document.getElementById('editClientLng').value = '';
+            } else {
+                // Editar cliente
+                document.getElementById('clientEditTitle').textContent = 'Editar Cliente';
+                const client = state.clients[clientIdx];
+                document.getElementById('editClientName').value = client.name || '';
+                document.getElementById('editClientFarm').value = client.farm || '';
+                document.getElementById('editClientCity').value = client.city || '';
+                document.getElementById('editClientLocationText').value = client.locationText || client.location || '';
+                document.getElementById('editClientLocationLink').value = client.locationLink || '';
+                document.getElementById('editClientLat').value = client.lat || '';
+                document.getElementById('editClientLng').value = client.lng || '';
+            }
+            
+            document.getElementById('clientEditModal').classList.add('active');
+            document.getElementById('editClientName').focus();
+        }
+
+        function closeClientEditModal() {
+            document.getElementById('clientEditModal').classList.remove('active');
+            currentClientIndex = null;
+        }
+
+        function saveClientEdit() {
+            const name = document.getElementById('editClientName').value.trim();
+            const farm = document.getElementById('editClientFarm').value.trim();
+            const city = document.getElementById('editClientCity').value.trim();
+            const locationText = document.getElementById('editClientLocationText').value.trim();
+            const locationLink = document.getElementById('editClientLocationLink').value.trim();
+            const lat = document.getElementById('editClientLat').value.trim();
+            const lng = document.getElementById('editClientLng').value.trim();
+
+            if (!name || !farm) {
+                alert('Nome e Fazenda são obrigatórios');
+                return;
+            }
+
+            const clientData = {
+                name,
+                farm,
+                city,
+                locationText,
+                locationLink,
+                lat,
+                lng
+            };
+
+            if (currentClientIndex === null) {
+                // Novo cliente
+                state.clients.push(clientData);
+            } else {
+                // Atualizar cliente
+                state.clients[currentClientIndex] = clientData;
+            }
+
+            saveState();
+            renderClients();
+            closeClientEditModal();
+        }
+
+        function editClient(idx) {
+            openClientEditModal(idx);
+        }
+
+        function deleteClient(idx) {
+            const client = state.clients[idx];
+            if (!confirm(`Excluir cliente ${client.name}?`)) return;
+            
+            state.clients.splice(idx, 1);
+            saveState();
+            renderClients();
+        }
+
+        // ==================== EXPORT ====================
+        function toggleExportMenu() {
+            document.getElementById('exportMenu').classList.toggle('active');
+        }
+
+        function exportPDF() {
+            alert('Função PDF em desenvolvimento. Use a impressão do navegador.');
+        }
+
+        function clearData() {
+            if (!confirm('Apagar TODOS os dados?')) return;
+            
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(LOGO_KEY);
+            location.reload();
+        }
+
+        // ==================== START ====================
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
