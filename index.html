@@ -1446,9 +1446,35 @@
             document.getElementById('exportMenu').classList.toggle('active');
         }
 
-        function exportPDF() {
-            alert('Função PDF em desenvolvimento. Use a impressão do navegador.');
-        }
+        async function exportPDF() {
+            try {
+    const container = document.querySelector('.container');
+    const canvas = await html2canvas(container, { scale: 2, backgroundColor: '#FFFFFF' });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgWidth = 210;
+    const pageHeight = 295;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 0;
+    
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+    
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+    
+    const dataBase = document.getElementById('dataBase').value || new Date().toISOString().split('T')[0];
+    pdf.save(`Planejamento_${dataBase}.pdf`);
+  } catch (error) {
+    console.error('Erro ao gerar PDF:', error);
+    alert('Erro ao gerar PDF. Verifique o console para mais detalhes.');
+  }
+              }
 
         function clearData() {
             if (!confirm('Apagar TODOS os dados?')) return;
